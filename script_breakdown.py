@@ -258,12 +258,7 @@ if uploaded_files:
     for uploaded_file in uploaded_files:
         st.write("Filename:", uploaded_file.name)
 
-# uploaded_file = 't1.txt'
-
 if uploaded_file is not None:
-	# st.write(type(uploaded_file))
-
-
 	output=script_breakdown(uploaded_file.name)
 	st.write(output)
 
