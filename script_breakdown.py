@@ -1,4 +1,14 @@
 # -*- coding: utf-8 -*-
+import pandas as pd
+import numpy as np
+import ast
+import nltk
+from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.feature_extraction.text import CountVectorizer
+from nltk.stem.porter import PorterStemmer
+ps=PorterStemmer()
+from sklearn.feature_extraction.text import CountVectorizer
+cv = CountVectorizer(max_features=5000,stop_words='english')
 
 import streamlit as st
 import pandas as pd
@@ -11,6 +21,102 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
 )
+
+
+################ movie recommendation from the script ##################
+movies=pd.read_csv("movie_data.csv")
+movies.dropna(inplace=True)
+movies.duplicated().sum()
+
+def convert(obj):
+  L= []
+  for i in ast.literal_eval(obj):
+    L.append(i["name"])
+  return L
+
+def convert3(obj):
+  L=[]
+  counter=0
+  for i in ast.literal_eval(obj):
+    if counter !=3:
+      L.append(i['name'])
+      counter+=1
+    else:
+      break
+  return L
+
+def fetch_director(obj):
+  L= []
+  for i in ast.literal_eval(obj):
+    if i['job']=='Director':
+      L.append(i["name"])
+      break
+  return L
+
+def stem(text):
+  y=[]
+
+  for i in text.split():
+    y.append(ps.stem(i))
+
+  return "".join(y)
+
+movies['genres']=movies['genres'].apply(convert)
+# movies['keywords']=movies['keywords'].apply(convert)
+# movies['cast'].apply(convert3)
+# movies['crew'].apply(fetch_director)
+movies['overview'].apply(lambda x:x.split())
+
+movies['genres']=movies['genres'].apply(lambda x:[i.replace("","")for i in x])
+# movies['keywords']=movies['keywords'].apply(lambda x:[i.replace("","")for i in x])
+# movies['cast']=movies['cast'].apply(lambda x:[i.replace("","")for i in x])
+# movies['crew']=movies['crew'].apply(lambda x:[i.replace("","")for i in x])
+
+movies['tags'] = movies['overview'].astype(str) + ' ' + \
+                movies['genres'].astype(str)
+
+movies['tags']= movies['overview'].astype(str) + movies['genres'].astype(str)
+
+new_df=movies[['title','tags','release_date','revenue','runtime','budget']]
+
+new_df['tags']=new_df['tags'].apply(lambda x:"".join(x))
+
+new_df['tags']=new_df['tags'].apply(stem)
+
+cv.fit_transform(new_df['tags']).toarray().shape
+
+vectors = cv.fit_transform(new_df['tags']).toarray()
+
+similarity=cosine_similarity(vectors)
+
+dic = {}
+
+def recommend(movie):
+    movie_index = new_df[new_df['title'] == movie].index[0]
+    distances=similarity[movie_index]
+    movies_list= sorted(list(enumerate(distances)),reverse=True,key = lambda x: x[1])[1:6]
+
+    print('Similar Movie-Script Movies and their Details are')
+
+    for i in movies_list:
+     print(f'Movie Title: {new_df.iloc[i[0]].title}')
+     print(f'Movie Release Date : {new_df.iloc[i[0]].release_date}')
+     print(f'Movie Budget: {new_df.iloc[i[0]].budget}')
+     print(f'Movie Revenue: {new_df.iloc[i[0]].revenue}')
+     print(f'Movie Runtime (min): {new_df.iloc[i[0]].runtime}')
+     print('---------------------------------------------------')
+     
+     dic = {'Movie Title': new_df.iloc[i[0]].title,
+     'Movie Release Date' : new_df.iloc[i[0]].release_date,
+     'Movie Budget': new_df.iloc[i[0]].budget
+     'Movie Revenue': new_df.iloc[i[0]].revenue
+     'Movie Runtime (min)': new_df.iloc[i[0]].runtime}
+     
+     df1 = pd.DataFrame(dic)
+     return st.write(df1)
+
+
+################ movie recommendation from the script-end ##################
 
 def load_data(file):
     # Assuming the file is a CSV for the sake of this example
@@ -246,22 +352,68 @@ def script_breakdown(input):
 
       return df_sc
 
-st.title('🎥 Script Breakdown')
 
-st.sidebar.header('User Input Features')
-# uploaded_file = st.sidebar.file_uploader("Upload your input file", type=["txt"])
-# Create a file uploader component
-uploaded_files = st.file_uploader("Upload multiple files", accept_multiple_files=True)
 
-# If files are uploaded, display their filenames
-if uploaded_files:
-	for uploaded_file in uploaded_files:
-		st.write("Filename:", uploaded_file.name)
-		output=script_breakdown(uploaded_file.name)
-		st.write(output)
-	    
-if st.button('download csv'):
-	output.to_csv("output.csv")
+
+################# page organization ###################
+import streamlit as st
+
+# Define all your pages
+def home_page():
+    st.title("Home Page")
+    st.write("Welcome to our movie analysis app!")
+
+def script_breakdown():
+	st.title('🎥 Script Breakdown')
+	st.sidebar.header('User Input Features')
+	# uploaded_file = st.sidebar.file_uploader("Upload your input file", type=["txt"])
+	# Create a file uploader component
+	uploaded_files = st.file_uploader("Upload multiple files", accept_multiple_files=True)
+	
+	# If files are uploaded, display their filenames
+	if uploaded_files:
+		for uploaded_file in uploaded_files:
+			st.write("Filename:", uploaded_file.name)
+			output=script_breakdown(uploaded_file.name)
+			st.write(output)
+		    
+	if st.button('download csv'):
+		output.to_csv("output.csv")
+
+def market_analysis():
+	st.write("please write a small decription of you movie")
+	user_input = st.text_input("Enter a string")
+	st.title("Similar movie based on the provided script are as follows")
+	recommend(movie)
+
+def genre_prediction():
+    st.title("Genre Prediction")
+    st.write("This is where we'll predict the genre of a movie.")
+
+# Create a dictionary of pages
+pages = {
+    "Home": home_page,
+    "Script Breakdown": script_breakdown,
+    "Market Analysis": market_analysis,
+    "Genre Prediction": genre_prediction
+}
+
+# Use radio button on sidebar for navigation
+st.sidebar.title("Navigation")
+selection = st.sidebar.radio("Go to", list(pages.keys()))
+
+# Display the selected page with the help of our dictionary
+pagesselection
+
+# Add a theme
+st.markdown("""
+<style>
+body {
+    color: #fff;
+    background-color: #4F8BF9;
+}
+</style>
+    """, unsafe_allow_html=True)
 
 
 
