@@ -115,9 +115,9 @@ def recommend(movie):
      'Movie Revenue': new_df.iloc[i[0]].revenue,
      'Movie Runtime (min)': new_df.iloc[i[0]].runtime}
      if df1:
-	     df.loc[len(df1)] = dic
+	df.loc[len(df1)] = dic
      else:
-	    df1 = pd.DataFrame(dic)
+	df1 = pd.DataFrame(dic)
      return st.write(df1)
 
 
