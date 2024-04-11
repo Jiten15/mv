@@ -384,7 +384,7 @@ def market_analysis():
 	st.write("please write a small decription of you movie")
 	user_input = st.text_input("Enter a string")
 	st.title("Similar movie based on the provided script are as follows")
-	recommend(movie)
+	recommend(user_input)
 
 def genre_prediction():
     st.title("Genre Prediction")
