@@ -4,5 +4,5 @@ matplotlib
 numpy
 #AST==0.0.2
 nltk
-sklearn
+scikit-learn
 nltk
