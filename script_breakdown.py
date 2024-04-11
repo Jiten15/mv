@@ -255,15 +255,11 @@ uploaded_files = st.file_uploader("Upload multiple files", accept_multiple_files
 
 # If files are uploaded, display their filenames
 if uploaded_files:
-    for uploaded_file in uploaded_files:
-        st.write("Filename:", uploaded_file.name)
-	output=script_breakdown(uploaded_file.name)
-	st.write(output)
-
-# if uploaded_file is not None:
-# 	output=script_breakdown(uploaded_file.name)
-# 	st.write(output)
-
+	for uploaded_file in uploaded_files:
+		st.write("Filename:", uploaded_file.name)
+		output=script_breakdown(uploaded_file.name)
+		st.write(output)
+	    
 if st.button('download csv'):
 	output.to_csv("output.csv")
 
