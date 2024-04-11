@@ -2,7 +2,7 @@ streamlit
 pandas
 matplotlib
 numpy
-AST==0.0.2
+#AST==0.0.2
 nltk
 sklearn
 nltk
