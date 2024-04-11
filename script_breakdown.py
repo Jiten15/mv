@@ -108,8 +108,8 @@ def recommend(movie):
      
      dic = {'Movie Title': new_df.iloc[i[0]].title,
      'Movie Release Date' : new_df.iloc[i[0]].release_date,
-     'Movie Budget': new_df.iloc[i[0]].budget
-     'Movie Revenue': new_df.iloc[i[0]].revenue
+     'Movie Budget': new_df.iloc[i[0]].budget,
+     'Movie Revenue': new_df.iloc[i[0]].revenue,
      'Movie Runtime (min)': new_df.iloc[i[0]].runtime}
      
      df1 = pd.DataFrame(dic)
