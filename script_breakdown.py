@@ -389,7 +389,7 @@ def market_analysis():
 	title = st.text_input("Enter title of your script")
 	# Create a select box widget
 	selected_genre = st.selectbox('Select your favorite genre:', genres)
-	s_plot = st.text_input("please write a short movie plot of your script"))
+	s_plot = st.text_input("please write a short movie plot of your script")
 	new_entry = {'title': title, 'genres': selected_genre, 'overview': s_plot}
 	df.loc[len(movies)] = new_entry
 	movie_re()
