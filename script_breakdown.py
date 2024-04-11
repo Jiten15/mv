@@ -102,22 +102,22 @@ def recommend(movie):
     print('Similar Movie-Script Movies and their Details are')
 
     for i in movies_list:
-     print(f'Movie Title: {new_df.iloc[i[0]].title}')
-     print(f'Movie Release Date : {new_df.iloc[i[0]].release_date}')
-     print(f'Movie Budget: {new_df.iloc[i[0]].budget}')
-     print(f'Movie Revenue: {new_df.iloc[i[0]].revenue}')
-     print(f'Movie Runtime (min): {new_df.iloc[i[0]].runtime}')
-     print('---------------------------------------------------')
-     
-     dic = {'Movie Title': new_df.iloc[i[0]].title,
-     'Movie Release Date' : new_df.iloc[i[0]].release_date,
-     'Movie Budget': new_df.iloc[i[0]].budget,
-     'Movie Revenue': new_df.iloc[i[0]].revenue,
-     'Movie Runtime (min)': new_df.iloc[i[0]].runtime}
-     if df1:
-	df.loc[len(df1)] = dic
-     else:
-	df1 = pd.DataFrame(dic)
+	     print(f'Movie Title: {new_df.iloc[i[0]].title}')
+	     print(f'Movie Release Date : {new_df.iloc[i[0]].release_date}')
+	     print(f'Movie Budget: {new_df.iloc[i[0]].budget}')
+	     print(f'Movie Revenue: {new_df.iloc[i[0]].revenue}')
+	     print(f'Movie Runtime (min): {new_df.iloc[i[0]].runtime}')
+	     print('---------------------------------------------------')
+	     
+	     dic = {'Movie Title': new_df.iloc[i[0]].title,
+	     'Movie Release Date' : new_df.iloc[i[0]].release_date,
+	     'Movie Budget': new_df.iloc[i[0]].budget,
+	     'Movie Revenue': new_df.iloc[i[0]].revenue,
+	     'Movie Runtime (min)': new_df.iloc[i[0]].runtime}
+	     if df1:
+		     df.loc[len(df1)] = dic
+	     else:
+		     df1 = pd.DataFrame(dic)
      return st.write(df1)
 
 
