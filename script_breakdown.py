@@ -402,28 +402,58 @@ def genre_prediction():
 
 # Create a dictionary of pages
 pages = {
-    "Home": home_page,
+    "Home": home_page(),
     "Script Breakdown": script_breakdown(),
     "Market Analysis": market_analysis(),
     "Genre Prediction": genre_prediction()
 }
 
-# Use radio button on sidebar for navigation
-st.sidebar.title("Navigation")
-selection = st.sidebar.radio("Go to", list(pages.keys()))
 
-# Display the selected page with the help of our dictionary
-# pagesselection
 
-# Add a theme
-st.markdown("""
+def sideBar():
+
+ with st.sidebar:
+    selected=option_menu(
+        menu_title="Main Menu",
+        options=["Home","Script Breakdown","Market Analysis","Genre Prediction"],
+        icons=["house"],
+        menu_icon="cast",
+        default_index=0
+    )
+ if selected=="Home":
+    
+    Home()
+    
+ if selected=="Script Breakdown":
+	 st.subheader(f"Page: {selected}")
+	 script_breakdown()
+    
+
+ if selected=="Market Analysis":
+	 st.subheader(f"Page: {selected}")
+	 market_analysis()
+	 
+ if selected=="Genre Prediction":
+    st.subheader(f"Page: {selected}")
+    genre_prediction()
+
+ if selected=="Predictions":
+    st.subheader(f"Page: {selected}")
+    feature_predictions()
+
+sideBar()
+
+Home()
+
+
+
+#theme
+hide_st_style=""" 
+
 <style>
-body {
-    color: #fff;
-    background-color: #4F8BF9;
-}
+#MainMenu {visibility:hidden;}
+footer {visibility:hidden;}
+header {visibility:hidden;}
 </style>
-    """, unsafe_allow_html=True)
-
-
+"""
 
