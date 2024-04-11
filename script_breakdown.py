@@ -94,20 +94,20 @@ def movie_re():
 
 
 def recommend(movie):
-    dic = {}
-    movie_index = new_df[new_df['title'] == movie].index[0]
-    distances=similarity[movie_index]
-    movies_list= sorted(list(enumerate(distances)),reverse=True,key = lambda x: x[1])[1:6]
-
-    print('Similar Movie-Script Movies and their Details are')
-
-    for i in movies_list:
-	     print(f'Movie Title: {new_df.iloc[i[0]].title}')
-	     print(f'Movie Release Date : {new_df.iloc[i[0]].release_date}')
-	     print(f'Movie Budget: {new_df.iloc[i[0]].budget}')
-	     print(f'Movie Revenue: {new_df.iloc[i[0]].revenue}')
-	     print(f'Movie Runtime (min): {new_df.iloc[i[0]].runtime}')
-	     print('---------------------------------------------------')
+	dic = {}
+	movie_index = new_df[new_df['title'] == movie].index[0]
+	distances=similarity[movie_index]
+	movies_list= sorted(list(enumerate(distances)),reverse=True,key = lambda x: x[1])[1:6]
+	
+	print('Similar Movie-Script Movies and their Details are')
+	
+	for i in movies_list:
+	     # print(f'Movie Title: {new_df.iloc[i[0]].title}')
+	     # print(f'Movie Release Date : {new_df.iloc[i[0]].release_date}')
+	     # print(f'Movie Budget: {new_df.iloc[i[0]].budget}')
+	     # print(f'Movie Revenue: {new_df.iloc[i[0]].revenue}')
+	     # print(f'Movie Runtime (min): {new_df.iloc[i[0]].runtime}')
+	     # print('---------------------------------------------------')
 	     
 	     dic = {'Movie Title': new_df.iloc[i[0]].title,
 	     'Movie Release Date' : new_df.iloc[i[0]].release_date,
@@ -118,7 +118,7 @@ def recommend(movie):
 		     df.loc[len(df1)] = dic
 	     else:
 		     df1 = pd.DataFrame(dic)
-     return st.write(df1)
+	return st.write(df1)
 
 
 ################ movie recommendation from the script-end ##################
