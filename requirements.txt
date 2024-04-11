@@ -2,7 +2,7 @@ streamlit
 pandas
 matplotlib
 numpy
-ast
+AST
 nltk
 sklearn
 nltk
