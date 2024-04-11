@@ -393,9 +393,9 @@ def genre_prediction():
 # Create a dictionary of pages
 pages = {
     "Home": home_page,
-    "Script Breakdown": script_breakdown,
-    "Market Analysis": market_analysis,
-    "Genre Prediction": genre_prediction
+    "Script Breakdown": script_breakdown(),
+    "Market Analysis": market_analysis(),
+    "Genre Prediction": genre_prediction()
 }
 
 # Use radio button on sidebar for navigation
