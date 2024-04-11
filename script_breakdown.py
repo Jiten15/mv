@@ -391,7 +391,7 @@ def market_analysis():
 	selected_genre = st.selectbox('Select your favorite genre:', genres)
 	s_plot = st.text_input("please write a short movie plot of your script")
 	new_entry = {'title': title, 'genres': selected_genre, 'overview': s_plot}
-	df.loc[len(movies)] = new_entry
+	movies.loc[len(movies)] = new_entry
 	movie_re()
 	st.title("Similar movie based on the provided script are as follows")
 	recommend(title )
