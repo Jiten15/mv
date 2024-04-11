@@ -443,7 +443,6 @@ def sideBar():
 
 sideBar()
 
-Home()
 
 
 
