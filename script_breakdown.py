@@ -28,6 +28,7 @@ movies=pd.read_csv("movie_data.csv")
 movies.dropna(inplace=True)
 movies.duplicated().sum()
 
+
 def convert(obj):
   L= []
   for i in ast.literal_eval(obj):
@@ -61,37 +62,39 @@ def stem(text):
 
   return "".join(y)
 
-movies['genres']=movies['genres'].apply(convert)
-# movies['keywords']=movies['keywords'].apply(convert)
-# movies['cast'].apply(convert3)
-# movies['crew'].apply(fetch_director)
-movies['overview'].apply(lambda x:x.split())
+def movie_re():
+	movies['genres']=movies['genres'].apply(convert)
+	# movies['keywords']=movies['keywords'].apply(convert)
+	# movies['cast'].apply(convert3)
+	# movies['crew'].apply(fetch_director)
+	movies['overview'].apply(lambda x:x.split())
+	
+	movies['genres']=movies['genres'].apply(lambda x:[i.replace("","")for i in x])
+	# movies['keywords']=movies['keywords'].apply(lambda x:[i.replace("","")for i in x])
+	# movies['cast']=movies['cast'].apply(lambda x:[i.replace("","")for i in x])
+	# movies['crew']=movies['crew'].apply(lambda x:[i.replace("","")for i in x])
+	
+	movies['tags'] = movies['overview'].astype(str) + ' ' + \
+	                movies['genres'].astype(str)
+	
+	movies['tags']= movies['overview'].astype(str) + movies['genres'].astype(str)
+	
+	new_df=movies[['title','tags','release_date','revenue','runtime','budget']]
+	
+	new_df['tags']=new_df['tags'].apply(lambda x:"".join(x))
+	
+	new_df['tags']=new_df['tags'].apply(stem)
+	
+	cv.fit_transform(new_df['tags']).toarray().shape
+	
+	vectors = cv.fit_transform(new_df['tags']).toarray()
+	
+	similarity=cosine_similarity(vectors)
 
-movies['genres']=movies['genres'].apply(lambda x:[i.replace("","")for i in x])
-# movies['keywords']=movies['keywords'].apply(lambda x:[i.replace("","")for i in x])
-# movies['cast']=movies['cast'].apply(lambda x:[i.replace("","")for i in x])
-# movies['crew']=movies['crew'].apply(lambda x:[i.replace("","")for i in x])
 
-movies['tags'] = movies['overview'].astype(str) + ' ' + \
-                movies['genres'].astype(str)
-
-movies['tags']= movies['overview'].astype(str) + movies['genres'].astype(str)
-
-new_df=movies[['title','tags','release_date','revenue','runtime','budget']]
-
-new_df['tags']=new_df['tags'].apply(lambda x:"".join(x))
-
-new_df['tags']=new_df['tags'].apply(stem)
-
-cv.fit_transform(new_df['tags']).toarray().shape
-
-vectors = cv.fit_transform(new_df['tags']).toarray()
-
-similarity=cosine_similarity(vectors)
-
-dic = {}
 
 def recommend(movie):
+    dic = {}
     movie_index = new_df[new_df['title'] == movie].index[0]
     distances=similarity[movie_index]
     movies_list= sorted(list(enumerate(distances)),reverse=True,key = lambda x: x[1])[1:6]
@@ -111,8 +114,10 @@ def recommend(movie):
      'Movie Budget': new_df.iloc[i[0]].budget,
      'Movie Revenue': new_df.iloc[i[0]].revenue,
      'Movie Runtime (min)': new_df.iloc[i[0]].runtime}
-     
-     df1 = pd.DataFrame(dic)
+     if df1:
+	     df.loc[len(df1)] = dic
+     else:
+	    df1 = pd.DataFrame(dic)
      return st.write(df1)
 
 
@@ -381,10 +386,17 @@ def script_breakdown():
 		output.to_csv("output.csv")
 
 def market_analysis():
-	st.write("please write a small decription of you movie")
-	user_input = st.text_input("Enter a string")
+	# Define a list of genres
+	genres = ['Action', 'Adventure', 'Animation', 'Biography', 'Comedy', 'Crime', 'Documentary', 'Drama', 'Fantasy', 'Horror', 'Mystery', 'Romance', 'Sci-Fi', 'Thriller', 'Western']
+	title = st.text_input("Enter title of your script")
+	# Create a select box widget
+	selected_genre = st.selectbox('Select your favorite genre:', genres)
+	s_plot = st.text_input("please write a short movie plot of your script"))
+	new_entry = {'title': title, 'genres': selected_genre, 'overview': s_plot}
+	df.loc[len(movies)] = new_entry
+	movie_re()
 	st.title("Similar movie based on the provided script are as follows")
-	recommend(user_input)
+	recommend(title )
 
 def genre_prediction():
     st.title("Genre Prediction")
